@@ -13,12 +13,18 @@ import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, spacing } from '../../styles/theme';
+import { getStorageUrl } from '../../config/config';
 
 
 
 const DiagnosisResultScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const { result, imageUri } = route.params || {};
+
+  // M10: Prefer server image URL, fallback to local URI
+  const displayImageUri = result?.image_url
+    ? (result.image_url.startsWith('http') ? result.image_url : getStorageUrl(result.image_url))
+    : imageUri;
 
   const getSeverityColor = (severity) => {
     switch (severity?.toLowerCase()) {
@@ -105,10 +111,10 @@ const DiagnosisResultScreen = ({ navigation, route }) => {
         contentContainerStyle={styles.scrollContent}
       >
       
-        {imageUri && (
+        {displayImageUri && (
           <View style={styles.imageContainer}>
             <Image 
-              source={imageUri}
+              source={displayImageUri}
               style={styles.cropImage}
               contentFit="cover"
             />

@@ -34,6 +34,9 @@ const CasesScreen = () => {
     if (Platform.OS === 'android') {
       NavigationBar.setVisibilityAsync('hidden');
       NavigationBar.setBehaviorAsync('overlay-swipe');
+      return () => {
+        NavigationBar.setVisibilityAsync('visible');
+      };
     }
   }, []);
 

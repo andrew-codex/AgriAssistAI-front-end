@@ -42,7 +42,7 @@ const CaseDetailScreen = ({ route, navigation }) => {
       const response = await diagnosisService.getDiagnosisResult(caseId);
       // Handle nested response structure from backend
       const data = response.data?.data || response.data;
-      console.log('Case Data:', data); // Debug log
+      if (__DEV__) console.log('Case Data:', data);
       setCaseData(data);
     } catch (error) {
       logError('Fetch Case Details', error);

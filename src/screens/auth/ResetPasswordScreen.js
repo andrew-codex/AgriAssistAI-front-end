@@ -60,12 +60,7 @@ const ResetPasswordScreen = () => {
 
     setLoading(true);
     try {
-      console.log("Reset password payload:", {
-        email,
-        otp,
-        password,
-        password_confirmation: passwordConfirmation,
-      });
+      // Password payload logging removed for security
       const otpToSend = String(otp).trim();
       const response = await resetPasswordRequest(
         email,

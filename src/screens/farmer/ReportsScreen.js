@@ -189,7 +189,7 @@ const ReportsScreen = () => {
         setHasMorePages(data.current_page < data.last_page);
         setCurrentPage(data.current_page);
       } catch (error) {
-        console.error("Error fetching reports:", error);
+        if (__DEV__) console.error("Error fetching reports:", error);
         if (page === 1) setReports([]);
       } finally {
         setLoading(false);
@@ -215,7 +215,7 @@ const ReportsScreen = () => {
         setSelectedReport(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching diagnosis details:", error);
+      if (__DEV__) console.error("Error fetching diagnosis details:", error);
     } finally {
       setDetailsLoading(false);
     }
@@ -239,7 +239,7 @@ const ReportsScreen = () => {
               await diagnosisService.deleteDiagnosis(reportId);
               setReports(reports.filter((report) => report.id !== reportId));
             } catch (error) {
-              console.error("Error deleting report:", error);
+              if (__DEV__) console.error("Error deleting report:", error);
               Alert.alert(
                 "Error",
                 "Failed to delete report. Please try again."
@@ -378,7 +378,7 @@ const ReportsScreen = () => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.navigate("Home")}>
+          onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <View style={styles.headerTextContainer}>

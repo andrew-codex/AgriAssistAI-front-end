@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = 'https://api.agriassist.ai/v1';
+// API_BASE_URL is configured via .env file — see config/config.js
 
 // Storage Keys
 export const STORAGE_KEYS = {
@@ -12,8 +12,8 @@ export const STORAGE_KEYS = {
 
 // User Types
 export const USER_TYPES = {
-  FARMER: 'farmer',
-  DA_WORKER: 'da',
+  FARMER: 'farmers',
+  DA_WORKER: 'DA_workers',
 };
 
 // Diagnosis Status
@@ -66,14 +66,12 @@ export const SUCCESS_MESSAGES = {
 
 // Validation Patterns
 export const VALIDATION = {
-  PHONE_REGEX: /^(\+91)?[6-9]\d{9}$/,
   PASSWORD_MIN_LENGTH: 6,
   NAME_MIN_LENGTH: 2,
   NAME_MAX_LENGTH: 50,
 };
 
 export default {
-  API_BASE_URL,
   STORAGE_KEYS,
   USER_TYPES,
   DIAGNOSIS_STATUS,

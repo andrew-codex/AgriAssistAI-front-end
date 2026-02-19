@@ -149,7 +149,7 @@ const ChatScreen = ({ route, navigation }) => {
         detectionId
       );
 
-      console.log("Messages loaded:", response.data);
+      if (__DEV__) console.log("Messages loaded:", response.data);
 
       if (
         response.data.success &&
@@ -160,7 +160,7 @@ const ChatScreen = ({ route, navigation }) => {
           let imageUrl = null;
           if (msg.image_url) {
             imageUrl = getStorageUrl(msg.image_url);
-            console.log(
+            if (__DEV__) console.log(
               "[ChatScreen] RAW image_url from API:",
               JSON.stringify(msg.image_url),
               "=> resolved:",
@@ -182,6 +182,18 @@ const ChatScreen = ({ route, navigation }) => {
           };
         });
         setMessages(formattedMessages);
+
+        // M9: Mark unread received messages as read
+        const unreadReceived = response.data.data.filter(
+          (msg) => msg.sender_id !== user?.id && !msg.is_read
+        );
+        for (const msg of unreadReceived) {
+          try {
+            await messageService.markAsRead(msg.id);
+          } catch (e) {
+            // Silently fail — non-critical
+          }
+        }
       } else {
         // H6: Show empty state instead of auto-sending an initial message
         setMessages([]);
@@ -310,13 +322,13 @@ const ChatScreen = ({ route, navigation }) => {
         imageFile
       );
 
-      console.log("Image upload response:", response.data);
+      if (__DEV__) console.log("Image upload response:", response.data);
 
       if (response.data.success) {
         let imageUrl = imageAsset.uri;
         if (response.data.data.image_url) {
           imageUrl = getStorageUrl(response.data.data.image_url);
-          console.log("Constructed image URL:", imageUrl);
+          if (__DEV__) console.log("Constructed image URL:", imageUrl);
         }
 
         setMessages((prev) =>

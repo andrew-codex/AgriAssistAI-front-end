@@ -101,15 +101,15 @@ const FarmerDashboard = ({ navigation }) => {
                 setLocationName(address.city || address.subregion || address.region || 'Your Location');
               }
             } catch (geocodeError) {
-              console.log('Geocoding failed, continuing with weather fetch');
+              if (__DEV__) console.log('Geocoding failed, continuing with weather fetch');
             }
           } catch (locationError) {
-            console.log('Location fetch failed, will use fallback:', locationError.message);
+            if (__DEV__) console.log('Location fetch failed, will use fallback:', locationError.message);
           }
         }
       }
     } catch (error) {
-      console.log('Location services error, using fallback:', error.message);
+      if (__DEV__) console.log('Location services error, using fallback:', error.message);
     }
 
     // Fetch weather with or without location
@@ -165,7 +165,13 @@ const FarmerDashboard = ({ navigation }) => {
     if (Platform.OS === 'android') {
       NavigationBar.setVisibilityAsync('hidden');
       NavigationBar.setBehaviorAsync('overlay-swipe');
+      return () => {
+        NavigationBar.setVisibilityAsync('visible');
+      };
     }
+  }, []);
+
+  useEffect(() => {
     fetchWeather();
     fetchRecentActivity();
   }, [fetchWeather, fetchRecentActivity]);
@@ -225,6 +231,17 @@ const FarmerDashboard = ({ navigation }) => {
       iconBg: '#2196F3',
       route: 'Support',
       isTab: true,
+    },
+    {
+      id: 4,
+      title: 'My Profile',
+      subtitle: 'Account info',
+      iconName: 'user',
+      iconType: 'Feather',
+      bgColor: '#F3E5F5',
+      iconBg: '#9C27B0',
+      route: 'Profile',
+      isTab: false,
     },
   ];
 

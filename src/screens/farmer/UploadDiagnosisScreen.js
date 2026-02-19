@@ -110,7 +110,7 @@ const UploadDiagnosisScreen = ({ navigation }) => {
 
       if (!result.canceled && result.assets && result.assets[0]) {
         const uri = result.assets[0].uri;
-        console.log("Selected image URI:", uri);
+        if (__DEV__) console.log("Selected image URI:", uri);
         setSelectedImage(uri);
       }
     } catch (err) {
@@ -133,7 +133,7 @@ const UploadDiagnosisScreen = ({ navigation }) => {
 
       if (!result.canceled && result.assets && result.assets[0]) {
         const uri = result.assets[0].uri;
-        console.log("Selected image URI:", uri);
+        if (__DEV__) console.log("Selected image URI:", uri);
         setSelectedImage(uri);
       }
     } catch (err) {
@@ -206,7 +206,6 @@ const UploadDiagnosisScreen = ({ navigation }) => {
       const response = await api.post("/diagnosis", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       });
 

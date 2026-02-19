@@ -23,25 +23,27 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      console.log('Checking auth...');
+      if (__DEV__) console.log('Checking auth...');
       const storedToken = await SecureStore.getItemAsync('token');
       const storedUser = await SecureStore.getItemAsync('user');
 
-      console.log('Stored token:', storedToken ? 'exists' : 'none');
-      console.log('Stored user:', storedUser ? 'exists' : 'none');
+      if (__DEV__) {
+        console.log('Stored token:', storedToken ? 'exists' : 'none');
+        console.log('Stored user:', storedUser ? 'exists' : 'none');
+      }
 
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
-        console.log('Auth restored');
+        if (__DEV__) console.log('Auth restored');
       } else {
-        console.log('No stored auth');
+        if (__DEV__) console.log('No stored auth');
       }
     } catch (error) {
-      console.log('Error checking auth:', error);
+      if (__DEV__) console.log('Error checking auth:', error);
     } finally {
       setLoading(false);
-      console.log('Auth check complete');
+      if (__DEV__) console.log('Auth check complete');
     }
   };
 
