@@ -43,13 +43,6 @@ const CasesScreen = () => {
     }, [activeTab])
   );
 
-    useEffect(() => {
-      if (Platform.OS === "android") {
-        NavigationBar.setVisibilityAsync("hidden");
-        NavigationBar.setBehaviorAsync("overlay-swipe");
-      }
-    }, []);
-
   const fetchCases = async (isRefreshing = false) => {
     try {
       if (!isRefreshing) setLoading(true);

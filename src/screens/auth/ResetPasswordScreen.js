@@ -15,7 +15,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import { colors, fonts, spacing } from "../../styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import * as api from "../../services/api";
+import { resetPasswordRequest } from "../../services/api";
 import { getErrorMessage, logError } from "../../utils/errorHandler";
 
 const ResetPasswordScreen = () => {
@@ -67,7 +67,7 @@ const ResetPasswordScreen = () => {
         password_confirmation: passwordConfirmation,
       });
       const otpToSend = String(otp).trim();
-      const response = await api.resetPasswordRequest(
+      const response = await resetPasswordRequest(
         email,
         otpToSend,
         password,

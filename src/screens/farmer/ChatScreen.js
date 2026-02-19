@@ -131,9 +131,18 @@ const ChatScreen = ({ route, navigation }) => {
     loadMessages();
   }, [navigation, userName, userId]);
 
-  const loadMessages = async () => {
+  // H5: Poll for new messages every 15 seconds
+  useEffect(() => {
+    if (!userId || !userName) return;
+    const interval = setInterval(() => {
+      loadMessages(true);
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [userId, userName, detectionId]);
+
+  const loadMessages = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
 
       const response = await messageService.getConversation(
         userId,
@@ -174,47 +183,24 @@ const ChatScreen = ({ route, navigation }) => {
         });
         setMessages(formattedMessages);
       } else {
-        const initialMessageContent = isDAWorker
-          ? `Hello ${userName}, I'm available to help with agricultural questions and diagnosis reviews.`
-          : `Hello ${userName}, I need help with my diagnosis. ${
-              detectionId
-                ? "The AI detected an issue in my crop."
-                : "I have a general question about crop health."
-            } Please review and provide guidance.`;
-
-        const initialMessage = {
-          id: generateMessageId(),
-          content: initialMessageContent,
-          created_at: new Date().toISOString(),
-          sender: { id: user?.id, name: "You" },
-          is_mine: true,
-        };
-
-        try {
-          await messageService.sendMessage(
-            userId,
-            initialMessage.content,
-            detectionId || null
-          );
-        } catch (sendError) {
-          logError("Send Initial Message", sendError);
-        }
-
-        setMessages([initialMessage]);
+        // H6: Show empty state instead of auto-sending an initial message
+        setMessages([]);
       }
 
       scrollToEndAfterUpdate();
     } catch (error) {
       logError("Load Messages", error);
-      const errorMessage = getErrorMessage(
-        error,
-        "Unable to load chat history."
-      );
-      Alert.alert("Connection Error", errorMessage);
+      if (!silent) {
+        const errorMessage = getErrorMessage(
+          error,
+          "Unable to load chat history."
+        );
+        Alert.alert("Connection Error", errorMessage);
+      }
 
-      setMessages([]);
+      if (!silent) setMessages([]);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -222,11 +208,12 @@ const ChatScreen = ({ route, navigation }) => {
     if (!newMessage.trim()) return;
 
     const messageText = newMessage.trim();
+    let tempMsg = null;
 
     try {
       setSendingMessage(true);
 
-      const tempMsg = {
+      tempMsg = {
         id: generateMessageId(),
         content: messageText,
         created_at: new Date().toISOString(),
@@ -268,7 +255,9 @@ const ChatScreen = ({ route, navigation }) => {
       const errorMessage = getErrorMessage(error, "Failed to send message.");
       Alert.alert("Error", errorMessage);
 
-      setMessages((prev) => prev.filter((msg) => msg.id !== tempMsg.id));
+      if (tempMsg) {
+        setMessages((prev) => prev.filter((msg) => msg.id !== tempMsg.id));
+      }
     } finally {
       setSendingMessage(false);
     }
@@ -277,7 +266,7 @@ const ChatScreen = ({ route, navigation }) => {
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -428,12 +417,32 @@ const ChatScreen = ({ route, navigation }) => {
           data={messages}
           renderItem={renderMessage}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.messagesList}
+          contentContainerStyle={[
+            styles.messagesList,
+            messages.length === 0 && styles.emptyListContent,
+          ]}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={() =>
             flatListRef.current?.scrollToEnd({ animated: true })
           }
           keyboardShouldPersistTaps="handled"
+          ListEmptyComponent={
+            !loading ? (
+              <View style={styles.emptyConversation}>
+                <MaterialCommunityIcons
+                  name="message-text-outline"
+                  size={48}
+                  color={colors.grayLight || "#ccc"}
+                />
+                <Text style={styles.emptyConversationTitle}>
+                  Start the conversation!
+                </Text>
+                <Text style={styles.emptyConversationText}>
+                  Send a message below to begin chatting with {userName}.
+                </Text>
+              </View>
+            ) : null
+          }
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -568,6 +577,28 @@ const styles = StyleSheet.create({
   messagesList: {
     padding: spacing.md,
     paddingBottom: spacing.lg,
+  },
+  emptyListContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  emptyConversation: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
+  },
+  emptyConversationTitle: {
+    fontSize: fonts.lg,
+    fontWeight: "600",
+    color: colors.text,
+    marginTop: spacing.md,
+  },
+  emptyConversationText: {
+    fontSize: fonts.sm,
+    color: colors.textLight || "#888",
+    textAlign: "center",
+    marginTop: spacing.xs,
   },
   messageWrapper: {
     marginVertical: spacing.xs,

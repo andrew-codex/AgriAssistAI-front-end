@@ -185,7 +185,7 @@ const ReportsScreen = () => {
 
         const data = response.data.success ? response.data.data : response.data;
         const items = (data.data || []).map(mapReportData);
-        setReports(page === 1 ? items : [...reports, ...items]);
+        setReports(prev => page === 1 ? items : [...prev, ...items]);
         setHasMorePages(data.current_page < data.last_page);
         setCurrentPage(data.current_page);
       } catch (error) {
@@ -196,12 +196,8 @@ const ReportsScreen = () => {
         setLoadingMore(false);
       }
     },
-    [reports, activeFilter]
+    [activeFilter]
   );
-
-  useEffect(() => {
-    fetchReports(1);
-  }, []);
 
   useEffect(() => {
     setLoading(true);

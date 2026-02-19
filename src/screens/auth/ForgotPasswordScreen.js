@@ -12,7 +12,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import { colors, fonts, spacing } from "../../styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import * as api from "../../services/api";
+import { forgotPasswordRequest } from "../../services/api";
 import { getErrorMessage, logError } from "../../utils/errorHandler";
 
 const ForgotPasswordScreen = () => {
@@ -34,7 +34,7 @@ const ForgotPasswordScreen = () => {
 
     setLoading(true);
     try {
-      const response = await api.forgotPasswordRequest(email);
+      const response = await forgotPasswordRequest(email);
       navigation.navigate("ResetPassword", { email: email });
 
  
