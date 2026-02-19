@@ -6,6 +6,7 @@ import AuthNavigator from './AuthNavigator';
 import FarmerNavigator from './FarmerNavigator';
 import DANavigator from './DANavigator';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { USER_TYPES } from '../utils/constants';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ const RootNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {!user ? (
           <Stack.Screen name="Auth" component={AuthNavigator} />
-        ) : user.role === 'farmers' ? (
+        ) : user.role === USER_TYPES.FARMER ? (
           <Stack.Screen name="Farmer" component={FarmerNavigator} />
         ) : (
           <Stack.Screen name="DA" component={DANavigator} />

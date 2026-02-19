@@ -24,6 +24,7 @@ import { getErrorMessage, logError } from "../../utils/errorHandler";
 import * as ImagePicker from "expo-image-picker";
 import { AuthContext } from "../../context/AuthContext";
 import { getStorageUrl } from "../../config/config";
+import { USER_TYPES } from "../../utils/constants";
 import { useRefresh } from "../../hooks/useRefresh";
 
 const ChatScreen = ({ route, navigation }) => {
@@ -56,7 +57,7 @@ const ChatScreen = ({ route, navigation }) => {
     }, 100);
   };
 
-  const isDAWorker = user?.role === "DA_workers" || user?.role === "da_worker";
+  const isDAWorker = user?.role === USER_TYPES.DA_WORKER;
 
   // Early return for missing params — placed AFTER all hooks
   if (!route.params || (!userId && !userName)) {
@@ -120,7 +121,7 @@ const ChatScreen = ({ route, navigation }) => {
           <View style={styles.headerInfo}>
             <Text style={styles.headerName}>{userName || "Chat"}</Text>
             <Text style={styles.headerStatus}>
-              {userRole === "DA_workers" || userRole === "da_worker"
+              {userRole === USER_TYPES.DA_WORKER
                 ? "Development Advisor"
                 : "Farmer"}
             </Text>

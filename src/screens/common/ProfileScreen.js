@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { colors, fonts, spacing } from '../../styles/theme';
 import { AuthContext } from '../../context/AuthContext';
+import { USER_TYPES } from '../../utils/constants';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -55,7 +56,7 @@ const ProfileScreen = () => {
       id: 4,
       icon: 'shield-checkmark-outline',
       label: 'Role',
-      value: user?.role === 'DA_workers' ? 'DA Worker' : 'Farmer',
+      value: user?.role === USER_TYPES.DA_WORKER ? 'DA Worker' : 'Farmer',
     },
   ];
 
@@ -78,7 +79,7 @@ const ProfileScreen = () => {
           </View>
           <Text style={styles.userName}>{(user?.name || 'User').toUpperCase()}</Text>
           <Text style={styles.userRole}>
-            {user?.role === 'DA_workers' ? 'DA Worker' : 'Farmer'}
+            {user?.role === USER_TYPES.DA_WORKER ? 'DA Worker' : 'Farmer'}
           </Text>
         </View>
 

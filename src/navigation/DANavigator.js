@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text, StyleSheet } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../styles/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -99,20 +99,5 @@ const DANavigator = () => {
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  placeholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-  },
-  placeholderText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-    marginTop: 12,
-  },
-});
 
 export default DANavigator;

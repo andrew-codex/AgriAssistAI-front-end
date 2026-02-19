@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   ScrollView,
   ActivityIndicator,
@@ -374,7 +373,7 @@ const ReportsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top + 18 }]}>
+    <View style={[styles.container, { paddingTop: insets.top + 18 }]}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -742,7 +741,7 @@ const ReportsScreen = () => {
           </View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

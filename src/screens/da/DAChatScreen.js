@@ -19,6 +19,7 @@ import messageService from '../../services/messageService';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useRefresh } from '../../hooks/useRefresh';
+import { USER_TYPES } from '../../utils/constants';
 
 const DAChatScreen = () => {
   const insets = useSafeAreaInsets();
@@ -115,7 +116,7 @@ const DAChatScreen = () => {
     navigation.navigate('Chat', {
       userId: conversation.other_user.id,
       userName: conversation.other_user.name,
-      userRole: 'farmers',
+      userRole: USER_TYPES.FARMER,
       detectionId: conversation.detection?.id || null
     });
   };

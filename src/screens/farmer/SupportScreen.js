@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { colors, fonts, spacing, borderRadius } from '../../styles/theme';
+import { USER_TYPES } from '../../utils/constants';
 import api from '../../services/api';
 import messageService from '../../services/messageService';
 import { useRefresh } from '../../hooks/useRefresh';
@@ -86,7 +87,7 @@ const SupportScreen = ({ navigation }) => {
             navigation.navigate('Chat', {
               userId: worker.id,
               userName: worker.name,
-              userRole: 'DA_workers',
+              userRole: USER_TYPES.DA_WORKER,
               detectionId: null 
             });
           }
@@ -99,7 +100,7 @@ const SupportScreen = ({ navigation }) => {
     navigation.navigate('Chat', {
       userId: conversation.other_user.id,
       userName: conversation.other_user.name,
-      userRole: 'DA_workers',
+      userRole: USER_TYPES.DA_WORKER,
       detectionId: conversation.detection?.id || null
     });
   };
