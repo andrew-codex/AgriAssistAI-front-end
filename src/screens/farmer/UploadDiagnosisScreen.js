@@ -62,14 +62,14 @@ const UploadDiagnosisScreen = ({ navigation }) => {
   ];
 
   const cropTypes = [
-    { id: "rice", label: "Rice" },
-    { id: "corn", label: "Corn" },
-    { id: "tomato", label: "Tomato" },
-    { id: "eggplant", label: "Eggplant" },
-    { id: "banana", label: "Banana" },
-    { id: "wheat", label: "Wheat" },
-    { id: "potato", label: "Potato" },
-    { id: "other", label: "Other" },
+    { id: "rice", label: "Rice", icon: "grain" },
+    { id: "corn", label: "Corn", icon: "corn" },
+    { id: "tomato", label: "Tomato", icon: "food-apple" },
+    { id: "eggplant", label: "Eggplant", icon: "food" },
+    { id: "banana", label: "Banana", icon: "fruit-grapes" },
+    { id: "wheat", label: "Wheat", icon: "barley" },
+    { id: "potato", label: "Potato", icon: "food" },
+    { id: "other", label: "Other", icon: "sprout" },
   ];
 
   const requestCameraPermission = async () => {

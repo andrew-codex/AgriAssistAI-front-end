@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Config } from '../config/config';
+import { emitAuthExpired } from '../utils/authEvents';
 
 const api = axios.create({
   baseURL: Config.API_URL,
@@ -29,7 +30,7 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     if (__DEV__) {
       console.log('API Error:', {
         url: error.config?.url,
@@ -37,6 +38,17 @@ api.interceptors.response.use(
         status: error.response?.status,
         data: error.response?.data,
       });
+    }
+
+    // Handle 401 token expiration — clear stored token and signal logout
+    if (error.response?.status === 401) {
+      try {
+        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('user');
+      } catch (e) {
+        // Ignore SecureStore cleanup errors
+      }
+      emitAuthExpired();
     }
 
     return Promise.reject(error);

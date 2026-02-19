@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     borderRadius: borderRadius.lg,
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.grayLight,
   },
   diagnosisCard: {
     backgroundColor: colors.white,

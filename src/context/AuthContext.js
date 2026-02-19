@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { loginRequest, registerRequest } from '../services/authService';
+import { onAuthExpired } from '../utils/authEvents';
 
 export const AuthContext = createContext();
 
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     setUser(res.data.user);
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('user');
     setUser(null);
@@ -76,7 +77,14 @@ export const AuthProvider = ({ children }) => {
       resetsIn: null,
       lastUpdated: null
     });
-  };
+  }, []);
+
+  // Listen for 401 auth expiration events from the API interceptor
+  useEffect(() => {
+    onAuthExpired(() => {
+      logout();
+    });
+  }, [logout]);
 
   const updateRateLimit = (rateLimitData) => {
     setRateLimit({

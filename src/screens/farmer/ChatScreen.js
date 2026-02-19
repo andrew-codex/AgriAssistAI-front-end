@@ -32,11 +32,23 @@ const ChatScreen = ({ route, navigation }) => {
 
   const { userId, userName, userRole, detectionId } = route.params || {};
 
+  // All hooks must be declared before any early return (Rules of Hooks)
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+  const flatListRef = useRef(null);
+
+  const { refreshing, onRefresh } = useRefresh(async () => {
+    if (userId && userName) {
+      await loadMessages();
+    }
+  });
 
   const generateMessageId = () => {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
-
 
   const scrollToEndAfterUpdate = () => {
     setTimeout(() => {
@@ -46,6 +58,7 @@ const ChatScreen = ({ route, navigation }) => {
 
   const isDAWorker = user?.role === "DA_workers" || user?.role === "da_worker";
 
+  // Early return for missing params — placed AFTER all hooks
   if (!route.params || (!userId && !userName)) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -57,7 +70,7 @@ const ChatScreen = ({ route, navigation }) => {
           />
           <Text style={styles.errorTitle}>Support Chat</Text>
           <Text style={styles.errorMessage}>
-            {user?.role === "DA_workers" || user?.role === "da_worker"
+            {isDAWorker
               ? "To start a conversation, please select a user from the appropriate section."
               : "To chat with a DA Worker, please go to your diagnosis results and select 'Send to DA'."}
           </Text>
@@ -71,17 +84,6 @@ const ChatScreen = ({ route, navigation }) => {
     );
   }
 
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [sendingMessage, setSendingMessage] = useState(false);
-  const [previewImage, setPreviewImage] = useState(null);
-  const flatListRef = useRef(null);
-
-  const { refreshing, onRefresh } = useRefresh(async () => {
-    await loadMessages();
-  });
-
   useEffect(() => {
     if (!userId || !userName) {
       if (__DEV__) {
@@ -92,9 +94,6 @@ const ChatScreen = ({ route, navigation }) => {
         });
         console.error("route.params:", route.params);
       }
-      Alert.alert("Error", "Missing chat information. Please try again.", [
-        { text: "OK", onPress: () => navigation.goBack() },
-      ]);
       return;
     }
 

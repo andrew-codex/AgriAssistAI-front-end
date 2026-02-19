@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.grayLight,
     gap: spacing.xs,
   },
   tabButtonActive: {
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   caseImagePlaceholder: {
     width: '100%',
     height: '100%',
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.grayLight,
     justifyContent: 'center',
     alignItems: 'center',
   },
